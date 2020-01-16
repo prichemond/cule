@@ -29,13 +29,24 @@ def worker(gpu, ngpus_per_node, args):
     num_frames_per_iter = args.num_ales * args.num_steps
     total_steps = math.ceil(args.t_max / (args.world_size * num_frames_per_iter))
 
+    if args.verbose:
+      print(num_frames_per_iter)
+      print(args.world_size)
+      print(total_steps)
+
     shape = (args.num_steps + 1, args.num_ales, args.num_stack, *train_env.observation_space.shape[-2:])
     states = torch.zeros(shape, device=train_device, dtype=torch.float32)
     states[0, :, -1] = observation.to(device=train_device, dtype=torch.float32)
 
+    if args.verbose:
+      print(shape)
+
     shape = (args.num_steps + 1, args.num_ales)
     values  = torch.zeros(shape, device=train_device, dtype=torch.float32)
     returns = torch.zeros(shape, device=train_device, dtype=torch.float32)
+
+    if args.verbose:
+      print(shape)
 
     shape = (args.num_steps, args.num_ales)
     rewards = torch.zeros(shape, device=train_device, dtype=torch.float32)
