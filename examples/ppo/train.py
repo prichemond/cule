@@ -79,8 +79,13 @@ def worker(gpu, ngpus_per_node, args):
 
     maybe_npy = lambda a: a.numpy() if args.use_openai else a
 
+    #args.batch_size = 256
+    print(args.batch_size)
+
     num_frames_per_iter = args.num_ales * args.num_steps
-    args.num_minibatches = num_frames_per_iter / args.batch_size
+    num_minibatches = num_frames_per_iter / args.batch_size
+    # FIXED BUG WHERE ARGS.NUM_MINIBATCHES was set instead, which led to it being 0.
+
     total_steps = math.ceil(args.t_max / (args.world_size * num_frames_per_iter))
 
     decay = 1.0 / total_steps
@@ -258,9 +263,9 @@ def worker(gpu, ngpus_per_node, args):
             iter_time = time.time() - start_time
             total_time += iter_time
 
-            value_loss = total_value_loss / (args.ppo_epoch * args.num_minibatches)
-            policy_loss = total_policy_loss / (args.ppo_epoch * args.num_minibatches)
-            dist_entropy = total_dist_entropy / (args.ppo_epoch * args.num_minibatches)
+            value_loss = total_value_loss / (args.ppo_epoch * num_minibatches)
+            policy_loss = total_policy_loss / (args.ppo_epoch * num_minibatches)
+            dist_entropy = total_dist_entropy / (args.ppo_epoch * num_minibatches)
 
             if args.plot:
                 writer.add_scalar('train/rewards_mean', final_rewards.mean().item(), T, walltime=total_time)

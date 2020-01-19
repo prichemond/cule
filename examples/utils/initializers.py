@@ -31,7 +31,8 @@ def args_initialize(gpu, ngpus_per_node, args):
 
     if ('batch_size' in args) and ((args.batch_size % args.world_size) != 0):
         raise ValueError('The batch_size({}) should be evenly divisible by the world_size({})'.format(args.batch_size, args.world_size))
-    args.batch_size = int(args.num_ales / args.world_size)
+    if ('batch_size' not in args):
+        args.batch_size = int(args.num_ales / args.world_size)
 
     if args.distributed:
         args.seed += args.gpu
