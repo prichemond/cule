@@ -155,8 +155,8 @@ model = model.to(device).train()
 optimizer = optim.Adam(model.parameters(), lr=lr, amsgrad= False) # savage, but AMSGrad was enabled by default !
 
 
-opt_level = 0
-loss_scale = 0.5
+opt_level = 'O0'
+loss_scale = None
 
 from apex.amp import __version__
 from apex.parallel import DistributedDataParallel as DDP
