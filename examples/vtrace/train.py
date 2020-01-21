@@ -24,7 +24,7 @@ except ImportError:
 def worker(gpu, ngpus_per_node, args):
     env_device, train_device = args_initialize(gpu, ngpus_per_node, args)
 
-    double_testing = True    
+    double_testing = False
 
     # openai and cule testing
     if double_testing == False:
